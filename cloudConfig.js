@@ -1,13 +1,14 @@
-const cloudinary = require('cloudinary');
+const { v2: cloudinary } = require('cloudinary');
 const CloudinaryStorage = require('multer-storage-cloudinary');
 
-cloudinary.v2.config({
+cloudinary.config({
     cloud_name: process.env.CLOUD_NAME,
     api_key: process.env.CLOUD_API_KEY,
-    api_secret: process.env.CLOUD_API_SECRET
+    api_secret: process.env.CLOUD_API_SECRET,
+    secure: true
 });
 
-const storage = CloudinaryStorage({
+const storage = new CloudinaryStorage({
     cloudinary,
     params: {
         folder: 'wanderlust_DEV',

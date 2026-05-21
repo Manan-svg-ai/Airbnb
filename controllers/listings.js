@@ -3,9 +3,20 @@ const Review = require('../models/review.js');
 const { listingSchema, reviewSchema } = require('../schema.js');
 const ExpressError = require('../utils/ExpressError.js');
 
+const normalizeImageUrl = (url) => {
+    if (!url) return url;
+    return url.replace(/^http:\/\//i, 'https://');
+};
+
 ///----------All lisiting home page ------------
 module.exports.index = async (req, res) => {
     let allListings = await Listing.find({});
+    allListings = allListings.map((listing) => {
+        if (listing.image?.url) {
+            listing.image.url = normalizeImageUrl(listing.image.url);
+        }
+        return listing;
+    });
     res.render('Listings/listings.ejs', { allListings });
 };
 
@@ -20,7 +31,7 @@ module.exports.createListing =async (req, res) => {
     listing.owner = req.user._id ;
 
     if (req.file) {
-        let url = req.file.url;
+        let url = normalizeImageUrl(req.file.path || req.file.url);
         let filename = req.file.public_id;
         listing.image = { url, filename };
     }
@@ -37,7 +48,9 @@ module.exports.showListingDetails = async (req, res) => {
     let listing = await Listing.findById(id)
         .populate({ path: 'reviews', populate: { path: 'author' } })
         .populate('owner');
-    console.log(listing);
+    if (listing?.image?.url) {
+        listing.image.url = normalizeImageUrl(listing.image.url);
+    }
     res.render('Listings/show.ejs', { listing });
 };
 
@@ -47,7 +60,7 @@ module.exports.renderEditForm = async (req, res) => {
     const id = req.params.id.trim();
     let listing = await Listing.findById(id).populate('owner');
 
-    let orignalImageUrl = listing.image.url;
+    let orignalImageUrl = normalizeImageUrl(listing.image.url);
     orignalImageUrl = orignalImageUrl.replace("/upload",`/upload/w_250`);
 
     res.render('Listings/edit.ejs', { listing , orignalImageUrl});
@@ -60,7 +73,7 @@ module.exports.updateListing = async (req, res) => {
     let listing = await Listing.findByIdAndUpdate(id, listingObj, { new: true });
 
     if (req.file) {
-        let url = req.file.url;
+        let url = normalizeImageUrl(req.file.path || req.file.url);
         let filename = req.file.public_id;
         listing.image = { url, filename };
         await listing.save();
