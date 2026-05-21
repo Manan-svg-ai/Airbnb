@@ -1,0 +1,150 @@
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    font-family: 'Montserrat', sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 400;
+    font-style: normal;
+}
+
+button,
+input,
+textarea,
+select {
+    font: inherit;
+}
+.container {
+    flex: 1;
+}
+
+.mgb-111 {
+    margin-bottom: 111px !important;
+}
+
+navbar {
+    background-color: #333;
+    overflow: hidden;
+}
+.fa-solid {
+    color: red;
+    font-size: 30px;
+}
+.nav-link {
+    color: rgb(38, 37, 37) !important;
+    font-size: 20px;
+}
+
+.f-info-links a {
+    text-decoration: none;
+    color: rgb(255, 255, 255);
+}
+.f-info-links a:hover {
+    text-decoration: underline;
+}
+.f-info-socials i {
+    color: white;
+    font-size: larger;
+}
+.f-info-socials i:hover {
+    color: rgb(255, 0, 0);
+}
+
+.f-info-links {
+    width: 100%;
+}
+.f-info-socials {
+    width: 100%;
+}
+.f-info {
+    color: white;
+    height: 8rem;
+    background-color: rgb(12, 14, 13);
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: space-evenly;
+    text-align: center;
+}
+.listing-card ,.show-card {
+    border: none !important;
+    margin-bottom: 2rem !important;
+}
+
+.card-img-top {
+    border-radius: 1rem !important;
+    width: 100% !important;
+    object-fit: cover !important;
+}
+.card-body {
+    padding: 0 !important;
+}
+.listing-link {
+    text-decoration: none;
+}
+.card-img-overlay {
+    opacity: 0;
+    transition: opacity 0.2s ease-in-out;
+}
+.card:hover .card-img-overlay {
+    opacity: 1;
+    background-color: rgba(0, 0, 0, 0.23) !important;
+    color: white !important;
+    border-radius: 1rem !important;
+    border-color: black !important;
+}
+.new-listing-btn,
+.edit-listing-btn,
+.show-edit-btn,
+.show-delete-btn ,
+.show-review-submit-btn{
+    background-color: rgb(255, 0, 0);
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    margin-top: 1rem;
+    margin-top: 0rem;
+}
+
+/* Show css */
+.show-img {
+    height: 50vh;
+}
+
+.show-details {
+    padding-top: 0.75rem;
+}
+
+.show-title {
+    margin-bottom: 0.75rem;
+}
+
+.show-description {
+    margin-bottom: 1rem;
+    color: rgb(70, 70, 70);
+    line-height: 1.6;
+}
+
+.show-location {
+    margin-bottom: 0.75rem;
+    color: rgb(100, 100, 100);
+}
+
+.show-location span {
+    font-weight: 600;
+    color: rgb(40, 40, 40);
+}
+
+.show-price {
+    font-weight: 700;
+    font-size: 1.1rem;
+}
+
+.show-btns {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 1rem;
+    padding: 0rem;
+}

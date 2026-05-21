@@ -1,0 +1,92 @@
+<% layout("/layouts/boilerplate") %>
+<!-- <h3>ALL LISTINGS</h3> -->
+<!-- <form action="/listings/new" method = "GET">
+    <button>Create New Listing</button>
+</form> -->
+<style>
+    #filters{
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1rem;
+        margin-bottom: 1rem;
+    }
+    .filter{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.5rem 1rem;
+        border: 1px solid #ccc;
+        border-radius: 20px;
+        cursor: pointer;
+        transition: background-color 0.3s ease, color 0.3s ease;
+    }
+    .filter p{
+        font-size: 0.8rem;
+        margin: 0;
+    }
+    .filter i{
+        font-size: 1.2rem;
+        color: #007bff;
+    }
+    .filter:hover{
+        background-color: #70b1f7;
+        color: white;
+        border-color: #007bff;
+    }
+</style>
+
+<div id="filters">
+    <div class="filter">
+        <div><i class="fa-solid fa-fire"></i></div>
+        <p>Trending</p>
+    </div>
+    <div class="filter">
+        <i class="fa-solid fa-bed"></i>
+        <p>Rooms</p>
+    </div>
+    <div class="filter">
+        <div><i class="fa-solid fa-mountain-city"></i></div>
+        <p>Iconic Cities</p>
+    </div>
+    <div class="filter">
+        <div><i class="fa-solid fa-mountain"></i></div>
+        <p>Mountains</p>
+    </div>
+    <div class="filter">
+        <i class="fa-brands fa-fort-awesome"></i>
+        <p>Castles</p>
+    </div>
+    <div class="filter">
+        <div><i class="fa-solid fa-person-swimming"></i></div>
+        <p>Amazing Pools</p>
+    </div>
+</div>
+
+<div class="row row-cols-lg-3 row-cols-md-2 row-cols-sm-1 g-4">
+    <% for(let listing of allListings) {%>
+        <a href="/listings/<%= listing.id %>" class="listing-link">
+            <div class="card col listing-card">
+                <img src="<%= listing.image.url %>" class="card-img-top" alt="listing image" style="height: 18rem;"/>
+                <div class="card-img-overlay"></div>
+                <div class="card-body">
+                    <p class="card-text">
+                        <b>
+                            <p>
+                                <%= listing.title %>
+                            </p>
+                        </b>
+                    <p>
+                        <b>&#8377;</b>
+                        <%= listing.price != null ? listing.price.toLocaleString("en-IN") : "Price not available" %>
+                        <% if (listing.price != null) { %>
+                            / night
+                        <% } %>
+                    </p>
+
+                </div>
+            </div>
+        </a>
+
+    <% } %>
+</div>

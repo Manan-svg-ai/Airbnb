@@ -1,0 +1,103 @@
+<% layout("/layouts/boilerplate") %>
+
+<div class="row">
+    <div class="col-10 offset-1">
+        <div class="card col-6 offset-3 show-card">
+            <h4 class="show-title">
+                <%= listing.title %>
+            </h4>
+            <h8><i>Owned by <%= listing.owner.username %></i></h8>
+            <img src="<%= listing.image.url %>" class="card-img-top show-img" alt="Listing image">
+            <div class="card-body">
+                <div class="card-text show-details">
+                    <p class="show-description"><i><%= listing.description %></i></p>
+                    <p class="show-location"><span>Location:</span> <%= listing.location %>, <%= listing.country %></p>
+                    <p class="show-price">&#8377; <%= listing.price.toLocaleString("en-IN") %></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<% if (currUser && listing.owner && currUser._id.equals(listing.owner._id)) { %>
+<div class="show-btns">
+    <form action="/listings/<%= listing.id %>/edit" method="GET">
+        <button class="show-edit-btn">Edit</button>
+    </form>
+    <form action="/listings/<%= listing.id %>?_method=DELETE" method="POST"
+        onsubmit="return confirm('Are you sure you want to delete this item?');">
+        <button class="show-delete-btn">Delete</button>
+    </form>
+</div>
+<% }%>
+
+
+
+<!--------------------- REVIEW SECTION------------------------>
+<div class="col-8 offset-2">
+    <% if(currUser){ %>
+    <hr>
+    <h5><b>ADD REVIEW</b></h5>
+    <form action="/listings/<%= listing.id %>/reviews" method="POST" novalidate class="needs-validation">
+        <div>
+            <!-- <label for="rating">Rating</label>
+            <input type="range" id="rating" name="review[rating]" min="1" max="5" class="form-range"> -->
+
+        <fieldset class="starability-slot">
+            <!-- <legend>Give stars:</legend> -->
+            <input type="radio" id="no-rate" class="input-no-rate" name="review[rating]" value="1" checked aria-label="No rating." />
+            <input type="radio" id="first-rate1" name="review[rating]" value="1" />
+            <label for="first-rate1" title="Terrible">1 star</label>
+            <input type="radio" id="first-rate2" name="review[rating]" value="2" />
+            <label for="first-rate2" title="Not good">2 stars</label>
+            <input type="radio" id="first-rate3" name="review[rating]" value="3" />
+            <label for="first-rate3" title="Average">3 stars</label>
+            <input type="radio" id="first-rate4" name="review[rating]" value="4" />
+            <label for="first-rate4" title="Very good">4 stars</label>
+            <input type="radio" id="first-rate5" name="review[rating]" value="5" />
+            <label for="first-rate5" title="Amazing">5 stars</label>
+        </fieldset>
+
+        </div>
+        <br>
+        <div>
+            <label for="comment">Comment</label><br>
+            <textarea required class="form-control" id="comment" name="review[comment]" cols="30" rows="2" placeholder="Describe here !"></textarea>
+            <div class="invalid-feedback">Please enter a comment</div>
+        </div>
+        <br>
+        <button type="submit" class="show-review-submit-btn">Submit</button>
+    </form>
+    <hr>
+    <% } %>
+
+
+
+    <% if(listing.reviews.length > 0){ %>
+    <h4>All REVIEWS</h4>
+    <div class="row row-cols-lg-2 row-cols-md-1 g-4">
+        <% for(review of listing.reviews){ %>
+            <div class="col">
+                <div class="card h-100 review-card">
+                    <div class="card-body">
+
+                        <h5 class="card-title"><b>@<%= review.author.username %></b></h5>
+
+                        <p class="starability-result card-text" data-rating="<%= review.rating %>">
+
+                        </p>
+
+                        <p class="card-text"><%= review.comment %></p>
+
+                    </div>
+                    <% if(currUser && review.author && currUser._id.equals(review.author._id)){ %>
+                    <form class = "" action="/listings/<%= listing._id %>/reviews/<%= review.id %>/?_method=DELETE" method = "POST" onsubmit="return confirm('Are you sure you want to delete this review?');">
+                        <button class="btn btn-sm btn-dark mb-1 ms-1">Delete</button>
+                    </form>
+                     <% } %>
+                </div>
+            </div>
+        <% }%>
+    </div>
+    <%}%>
+</div>
