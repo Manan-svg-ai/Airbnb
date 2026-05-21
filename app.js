@@ -23,19 +23,21 @@ const userRouter = require('./routes/user.js');
 const session = require('express-session');
 const flash = require('connect-flash');
 const MongoStore = require('connect-mongo').default;
+const helmet = require('helmet');
 
 const passport = require('passport');
 const LocalStrategy = require('passport-local');
 const User = require('./models/user.js');
 
 const dbUrl = process.env.ATLASDB_URL;
+const secret = process.env.SECRET || 'change-this-secret';
 
 //_________________________Functions_____________________________
 
 const store = MongoStore.create({
     mongoUrl: dbUrl,
     crypto: {
-        secret: process.env.SECRET
+        secret
     },
     touchAfter: 24 * 60 * 60
 });
@@ -46,19 +48,62 @@ store.on('error', (err) => {
 
 const sessionOptions = {
     store,
-    secret: process.env.SECRET,
+    secret,
     resave: false,
-    saveUninitialized: true
+    saveUninitialized: false,
+    cookie: {
+        httpOnly: true,
+        sameSite: 'lax',
+        secure: process.env.NODE_ENV === 'production',
+        maxAge: 7 * 24 * 60 * 60 * 1000
+    }
 };
 
 //_________________________middleware_____________________________
 
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'init', 'views'));
+app.set('trust proxy', 1);
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, '/public')));
 app.use(methodoverride('_method'));
 app.engine('ejs', ejsMate);
+
+app.use(
+    helmet({
+        crossOriginResourcePolicy: false,
+        contentSecurityPolicy: {
+            directives: {
+                defaultSrc: ["'self'"],
+                scriptSrc: [
+                    "'self'",
+                    'https://cdn.jsdelivr.net',
+                    'https://cdnjs.cloudflare.com'
+                ],
+                styleSrc: [
+                    "'self'",
+                    "'unsafe-inline'",
+                    'https://cdn.jsdelivr.net',
+                    'https://cdnjs.cloudflare.com',
+                    'https://fonts.googleapis.com'
+                ],
+                imgSrc: [
+                    "'self'",
+                    'data:',
+                    'https://res.cloudinary.com'
+                ],
+                connectSrc: ["'self'"],
+                fontSrc: [
+                    "'self'",
+                    'https://cdnjs.cloudflare.com',
+                    'https://fonts.gstatic.com'
+                ],
+                objectSrc: ["'none'"],
+                upgradeInsecureRequests: []
+            }
+        }
+    })
+);
 
 app.use(session(sessionOptions));
 app.use(flash());
